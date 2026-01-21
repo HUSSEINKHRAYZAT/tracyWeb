@@ -1,0 +1,6 @@
+nixpacks.provider = "node"
+nixpacks.build.cmd = "npm install"
+nixpacks.start.cmd = "npm start"
+
+[variables]
+NODE_ENV = "production"

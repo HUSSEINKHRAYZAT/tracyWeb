@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - Tracy Talks Health</title>
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/overrides.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;">Tracy Talks Health</a></h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#services">What We Offer</a></li>
+                <li><a href="index.html#about">Meet Tracy</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div id="userDropdownContainer" style="display: none;"></div>
+                <a href="cart.html" class="cart-link" aria-label="Cart">
+                <span class="cart-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M7.5 9.5V7.3C7.5 5.6 9 4.3 10.7 4.3H13.3C15 4.3 16.5 5.6 16.5 7.3V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                        <path d="M6 9.5H18L16.8 19.2C16.7 20 16 20.6 15.2 20.6H8.8C8 20.6 7.3 20 7.2 19.2L6 9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                        <path d="M9.5 13.4H14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                    <span class="cart-count" data-count="0">0</span>
+                </span>
+                <span class="cart-label">Cart</span>
+            </a>
+        </div>
+        <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- One to One Coaching Section -->
+    <section id="one-to-one" class="services">
+        <div class="container">
+            <h2 class="section-title">One To One Coaching</h2>
+            <div class="service-image" style="max-width: 800px; margin: 0 auto 3rem;">
+                <img src="images/onetoone.avif" alt="One to one coaching" loading="lazy" style="width: 100%; border-radius: 12px;">
+            </div>
+            
+            <div class="services-grid" style="gap: var(--space-8); margin-top: var(--space-8);">
+                <div class="card" style="position: relative; border: 2px solid var(--primary-300); background: white; border-radius: var(--radius-xl); padding: var(--space-6); transition: all var(--transition-base); box-shadow: var(--shadow-md);">
+                    <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 10;">
+                        <span style="display: inline-block; padding: var(--space-2) var(--space-5); background: var(--primary-600); color: white; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: var(--shadow-md);">STARTER</span>
+                    </div>
+                    <h3 style="font-family: var(--font-display); font-size: var(--text-3xl); color: var(--primary-800); margin-top: var(--space-4); margin-bottom: var(--space-3); text-align: center; border-bottom: 2px solid var(--primary-200); padding-bottom: var(--space-3);">Mindful Start</h3>
+                    <p style="color: var(--neutral-600); line-height: 1.6; margin: var(--space-4) 0;">Entry-level plan designed to introduce clients to integrative health coaching. Focuses on mindset awareness, stress regulation, and foundational wellness strategies.</p>
+                    <div style="background: var(--primary-50); border-radius: var(--radius-lg); padding: var(--space-4); margin-top: var(--space-6);">
+                        <h4 style="font-family: var(--font-display); font-size: var(--text-lg); color: var(--primary-800); margin-bottom: var(--space-3);">What is Offered:</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--primary-600)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700);">1 private session/month</span>
+                            </li>
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--primary-600)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700);">Personalized goal setting and reflective tools</span>
+                            </li>
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--primary-600)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700);">Light email support between sessions</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card" style="position: relative; border: 3px solid var(--secondary-500); background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: 0 8px 30px rgba(181, 121, 74, 0.25); transform: scale(1.05); transition: all var(--transition-base); z-index: 2;">
+                    <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 10;">
+                        <span style="display: inline-block; padding: var(--space-2) var(--space-6); background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600)); color: white; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: var(--shadow-lg);">MOST POPULAR</span>
+                    </div>
+                    <h3 style="font-family: var(--font-display); font-size: var(--text-3xl); color: var(--secondary-700); margin-top: var(--space-4); margin-bottom: var(--space-3); text-align: center; border-bottom: 2px solid var(--secondary-300); padding-bottom: var(--space-3);">Growth Path</h3>
+                    <p style="color: var(--neutral-600); line-height: 1.6; margin: var(--space-4) 0;">Mid-tier subscription offering consistent guidance and accountability. Integrates psychological principles and holistic methods to strengthen resilience and lifestyle balance.</p>
+                    <div style="background: linear-gradient(135deg, var(--secondary-50), var(--secondary-100)); border-radius: var(--radius-lg); padding: var(--space-4); margin-top: var(--space-6);">
+                        <h4 style="font-family: var(--font-display); font-size: var(--text-lg); color: var(--secondary-800); margin-bottom: var(--space-3);">What is Offered:</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--secondary-600)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700); font-weight: 500;">2 private sessions/month</span>
+                            </li>
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--secondary-600)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700); font-weight: 500;">Data-informed progress tracking</span>
+                            </li>
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--secondary-600)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700); font-weight: 500;">Priority messaging access</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card" style="position: relative; border: 2px solid var(--primary-400); background: linear-gradient(135deg, white 0%, var(--primary-50) 100%); border-radius: var(--radius-xl); padding: var(--space-6); transition: all var(--transition-base); box-shadow: var(--shadow-md);">
+                    <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 10;">
+                        <span style="display: inline-block; padding: var(--space-2) var(--space-5); background: var(--primary-800); color: white; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: var(--shadow-md);">PREMIUM</span>
+                    </div>
+                    <h3 style="font-family: var(--font-display); font-size: var(--text-3xl); color: var(--primary-900); margin-top: var(--space-4); margin-bottom: var(--space-3); text-align: center; border-bottom: 2px solid var(--primary-300); padding-bottom: var(--space-3);">Thrive Journey</h3>
+                    <p style="color: var(--neutral-600); line-height: 1.6; margin: var(--space-4) 0;">Premium coaching experience for clients seeking long-term transformation. Combines behavioral science, therapeutic insight, and holistic health practices for measurable well-being outcomes.</p>
+                    <div style="background: white; border: 2px solid var(--primary-200); border-radius: var(--radius-lg); padding: var(--space-4); margin-top: var(--space-6);">
+                        <h4 style="font-family: var(--font-display); font-size: var(--text-lg); color: var(--primary-800); margin-bottom: var(--space-3);">What is Offered:</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--primary-700)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700);">4 private sessions/month</span>
+                            </li>
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--primary-700)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700);">Custom wellness roadmap + tailored resources</span>
+                            </li>
+                            <li style="padding: var(--space-2) 0; display: flex; align-items: start; gap: var(--space-2);">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="10" cy="10" r="10" fill="var(--primary-700)"/>
+                                    <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="color: var(--neutral-700);">Comprehensive support between sessions</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://calendar.app.google/tqa4yhJNXuyYTE6W6" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Book Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Corporate Coaching Section -->
+    <section id="corporate-coaching" class="services" style="background: var(--light-bg);">
+        <div class="container">
+            <h2 class="section-title">Corporate Coaching</h2>
+            <div class="service-image" style="max-width: 800px; margin: 0 auto 3rem;">
+                <img src="images/corport.avif" alt="Corporate coaching" loading="lazy" style="width: 100%; border-radius: 12px;">
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Integrative Workplace Wellness</h3>
+                    <p>Tracy Talks Health offers corporate coaching programs that bridge psychology, leadership, and holistic well-being. Each program is tailored to enhance employee performance, reduce burnout, and foster a culture of health within the workplace.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Leadership & Mindset</h3>
+                    <p>Workshops and one-on-one coaching designed to help leaders strengthen emotional intelligence, resilience, and communication. Grounded in evidence-based psychological principles, the aim is to promote clarity, confidence, and purpose-driven leadership.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Employee Wellbeing</h3>
+                    <p>Group sessions and wellness initiatives focused on stress management, work-life balance, and motivation. Programs combine practical behavior-change strategies with mindfulness and lifestyle coaching for lasting impact.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Organizational Impact</h3>
+                    <p>By integrating mental health, productivity, and engagement strategies, Tracy Talks Health supports organizations in creating sustainable well-being cultures — where employees thrive, teams collaborate effectively, and businesses grow stronger from within.</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://calendar.app.google/tqa4yhJNXuyYTE6W6" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Book Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wellness Events Section -->
+    <section id="wellness-events" class="services">
+        <div class="container">
+            <h2 class="section-title">Wellness Events</h2>
+            <div class="service-image" style="max-width: 800px; margin: 0 auto 3rem;">
+                <img src="images/well.avif" alt="Wellness events" loading="lazy" style="width: 100%; border-radius: 12px;">
+            </div>
+            
+            <p class="section-subtitle" style="max-width: 800px; margin: 0 auto 2rem; text-align: center;">Our wellness events create engaging, hands-on experiences designed to inspire growth and connection. Each gathering blends movement, reflection, and community engagement to help individuals reconnect with their wellbeing in meaningful, enjoyable ways.</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Experiential Wellness</h3>
+                    <p>In collaboration with institutions, organizations, and health professionals, our events range from educational seminars to practical wellness workshops. This allows us to cater to diverse audiences — from students to corporate teams — adapting content to different needs, backgrounds, and education levels.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Mindfulness, Seminars & Workshops</h3>
+                    <p>Rooted in evidence-based health psychology, every event integrates principles of behavior change, mindfulness, positive psychology, and lifestyle science. These gatherings translate research into real-life practices, offering participants actionable tools that support long-term wellbeing.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Health Psychology in Action</h3>
+                    <p>Each event is designed to bridge the gap between scientific knowledge and everyday application, empowering attendees to make informed, sustainable changes that enhance both mental and physical health.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wellness Club Section -->
+    <section id="wellness-club" class="services" style="background: var(--light-bg);">
+        <div class="container">
+            <h2 class="section-title">Wellness Club</h2>
+            <div class="service-image" style="max-width: 800px; margin: 0 auto 3rem;">
+                <img src="images/WellnessClub.avif" alt="Wellness club" loading="lazy" style="width: 100%; border-radius: 12px;">
+            </div>
+            
+            <p class="section-subtitle" style="max-width: 800px; margin: 0 auto 2rem; text-align: center;">A community-based extension of the Tracy Talks Health brand, bringing people together through experiential wellness. The club promotes connection, creativity, and balance through activities that nurture both mind and body.</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Healthy with Tracy</h3>
+                    <p>Members participate in guided experiences such as mindful hikes, paint-and-picnic sessions, journaling workshops, and seasonal wellness events. Each gathering is designed to encourage reflection, stress relief, and joyful movement.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Holistic Activities</h3>
+                    <p>From creative expression to nature-based mindfulness, activities are curated to foster self-awareness, relaxation, and holistic growth. Each experience offers a space for participants to slow down, reconnect, and recharge.</p>
+                </div>
+                
+                <div class="service-card">
+                    <h3>Community Impact</h3>
+                    <p>The Wellness Club aims to foster belonging, resilience, and empowerment. By connecting like-minded individuals, it builds a culture of holistic health. Proving that well-being grows stronger together.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="contact" style="padding: 4rem 0;">
+        <div class="container">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <h2 class="section-title">Ready to Start Your Journey?</h2>
+                <p style="margin-bottom: 2rem; font-size: 1.1rem;">Book a clarity call to discuss which service is right for you.</p>
+                <a href="https://calendar.app.google/tqa4yhJNXuyYTE6W6" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="font-size: 1.1rem; padding: 1rem 2rem;">Schedule a Call</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Accessibility</a>
+                </div>
+                <p>&copy; 2026 Tracy Talks Health. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal - Modern Design -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal">
+            <div id="authModalContent"></div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/auth-modal.js"></script>
+</body>
+</html>

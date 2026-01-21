@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Areeba Payment Gateway Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .test-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .response-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .response-section.active {
+            display: block;
+        }
+
+        .response-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .json-viewer {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .key {
+            color: #66d9ef;
+        }
+
+        .string {
+            color: #a6e22e;
+        }
+
+        .number {
+            color: #ae81ff;
+        }
+
+        .boolean {
+            color: #fd971f;
+        }
+
+        .null {
+            color: #f92672;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .copy-btn {
+            background: #4caf50;
+            padding: 8px 16px;
+            margin-top: 10px;
+            width: auto;
+            font-size: 14px;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Areeba Payment Gateway Test Interface</h1>
+            <p>This tool helps you see exactly what data your website sends to the Areeba payment gateway. Perfect for debugging and understanding the payment flow.</p>
+        </div>
+
+        <div class="test-section">
+            <h2>Create Test Payment</h2>
+            
+            <form id="testPaymentForm">
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" name="amount" value="50.00" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" name="currency">
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="LBP">LBP - Lebanese Pound</option>
+                            <option value="EUR">EUR - Euro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orderNumber">Order Number</label>
+                        <input type="text" id="orderNumber" name="orderNumber" value="">
+                        <small style="color: #666;">Leave empty for auto-generate</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" name="description" value="Test Order">
+                    </div>
+                </div>
+
+                <button type="submit">Create Payment Session</button>
+            </form>
+
+            <div class="loader" id="loader"></div>
+        </div>
+
+        <div class="response-section" id="responseSection">
+            <div class="tab-container">
+                <button class="tab active" data-tab="request">Request Data</button>
+                <button class="tab" data-tab="response">Gateway Response</button>
+                <button class="tab" data-tab="headers">Request Headers</button>
+                <button class="tab" data-tab="config">Configuration</button>
+            </div>
+
+            <div class="tab-content active" id="request-tab">
+                <h3>Data Sent to Areeba Gateway</h3>
+                <div id="requestData" class="json-viewer"></div>
+                <button class="copy-btn" onclick="copyToClipboard('requestData')">📋 Copy Request</button>
+            </div>
+
+            <div class="tab-content" id="response-tab">
+                <h3>Response from Areeba Gateway</h3>
+                <div id="responseData" class="json-viewer"></div>
+                <button class="copy-btn" onclick="copyToClipboard('responseData')">📋 Copy Response</button>
+            </div>
+
+            <div class="tab-content" id="headers-tab">
+                <h3>Request Headers</h3>
+                <div id="headersData" class="json-viewer"></div>
+                <button class="copy-btn" onclick="copyToClipboard('headersData')">📋 Copy Headers</button>
+            </div>
+
+            <div class="tab-content" id="config-tab">
+                <h3>Current Configuration</h3>
+                <div id="configData" class="json-viewer"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📚 What This Shows</h2>
+            <div class="alert alert-info">
+                <strong>Request Data:</strong> The exact JSON payload your backend sends to Areeba's API, including order details, amounts, and operation type.
+            </div>
+            <div class="alert alert-info">
+                <strong>Gateway Response:</strong> The response from Areeba including session ID, checkout URL, and any error messages.
+            </div>
+            <div class="alert alert-info">
+                <strong>Request Headers:</strong> Authentication headers and content type sent with the request.
+            </div>
+            <div class="alert alert-info">
+                <strong>Configuration:</strong> Your current Areeba gateway settings (API URL, merchant ID, version).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        // Form submission
+        document.getElementById('testPaymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                amount: parseFloat(formData.get('amount')),
+                currency: formData.get('currency'),
+                orderNumber: formData.get('orderNumber') || undefined,
+                description: formData.get('description')
+            };
+
+            const loader = document.getElementById('loader');
+            const responseSection = document.getElementById('responseSection');
+            
+            loader.style.display = 'block';
+            responseSection.classList.remove('active');
+
+            try {
+                const response = await fetch('/api/test/areeba-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                loader.style.display = 'none';
+                responseSection.classList.add('active');
+
+                // Display request data
+                document.getElementById('requestData').innerHTML = syntaxHighlight(result.requestData);
+                
+                // Display response data
+                document.getElementById('responseData').innerHTML = syntaxHighlight(result.responseData);
+                
+                // Display headers
+                document.getElementById('headersData').innerHTML = syntaxHighlight(result.headers);
+                
+                // Display configuration
+                document.getElementById('configData').innerHTML = syntaxHighlight(result.config);
+
+            } catch (error) {
+                loader.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Syntax highlighting for JSON
+        function syntaxHighlight(json) {
+            if (typeof json !== 'string') {
+                json = JSON.stringify(json, null, 2);
+            }
+            
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                let cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Auto-generate order number
+        document.getElementById('orderNumber').placeholder = `ORD${Date.now()}`;
+    </script>
+</body>
+</html>

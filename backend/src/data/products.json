@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Omega-3 Premium",
+    "price": 34.99,
+    "category": "supplements",
+    "description": "High-quality omega-3 fish oil for heart and brain health.",
+    "image": "https://images.unsplash.com/photo-1550572017-4950ca56e5a0?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 2,
+    "name": "Mindfulness Journal",
+    "price": 24.99,
+    "category": "books",
+    "description": "Guided journal for daily reflection and mindfulness practice.",
+    "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 3,
+    "name": "Vitamin D3",
+    "price": 19.99,
+    "category": "supplements",
+    "description": "Essential vitamin D3 for immune support and bone health.",
+    "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 4,
+    "name": "Yoga Mat Pro",
+    "price": 49.99,
+    "category": "wellness",
+    "description": "Premium non-slip yoga mat for your daily practice.",
+    "image": "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 5,
+    "name": "The Wellness Guide",
+    "price": 29.99,
+    "category": "books",
+    "description": "Comprehensive guide to holistic health and wellness.",
+    "image": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 6,
+    "name": "Meditation Cushion",
+    "price": 39.99,
+    "category": "wellness",
+    "description": "Comfortable meditation cushion for extended practice sessions.",
+    "image": "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 7,
+    "name": "Probiotic Complex",
+    "price": 44.99,
+    "category": "supplements",
+    "description": "Advanced probiotic formula for digestive health.",
+    "image": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 8,
+    "name": "Stress Relief Tea",
+    "price": 16.99,
+    "category": "wellness",
+    "description": "Herbal tea blend designed to promote relaxation and calm.",
+    "image": "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=300&fit=crop"
+  }
+]

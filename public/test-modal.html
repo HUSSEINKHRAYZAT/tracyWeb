@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Verification Modal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div style="padding: 40px;">
+        <h1>Email Verification Modal Test</h1>
+        <p>Click the button below to test the verification modal:</p>
+        <button onclick="testShowModal()" style="padding: 12px 24px; background: #2f4b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;">
+            Show Verification Modal
+        </button>
+        
+        <div style="margin-top: 30px; background: #f5f5f5; padding: 20px; border-radius: 8px;">
+            <h3>Console Output:</h3>
+            <div id="console" style="font-family: monospace; font-size: 12px; white-space: pre-wrap;"></div>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/email-verification.js"></script>
+    
+    <script>
+        // Override console.log to show in page
+        const consoleDiv = document.getElementById('console');
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleDiv.textContent += args.join(' ') + '\n';
+        };
+        
+        const originalError = console.error;
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            consoleDiv.textContent += '❌ ERROR: ' + args.join(' ') + '\n';
+        };
+        
+        function testShowModal() {
+            console.log('=== Testing Modal ===');
+            console.log('emailVerification exists:', typeof emailVerification !== 'undefined');
+            
+            if (typeof emailVerification !== 'undefined') {
+                console.log('Calling show()...');
+                emailVerification.show('test@example.com', 'test-123');
+            } else {
+                console.error('emailVerification is not defined!');
+            }
+            
+            // Check if modal exists
+            setTimeout(() => {
+                const modal = document.getElementById('verificationModal');
+                console.log('Modal element exists:', !!modal);
+                if (modal) {
+                    console.log('Modal display style:', modal.style.display);
+                    console.log('Modal computed display:', window.getComputedStyle(modal).display);
+                }
+            }, 100);
+        }
+        
+        // Auto-test on page load
+        setTimeout(() => {
+            console.log('=== Page Loaded ===');
+            console.log('emailVerification:', typeof emailVerification);
+            const modal = document.getElementById('verificationModal');
+            console.log('Modal exists:', !!modal);
+        }, 500);
+    </script>
+</body>
+</html>

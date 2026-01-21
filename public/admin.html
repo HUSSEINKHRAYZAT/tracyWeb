@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Tracy Talks Health</title>
+    <link rel="icon" type="image/avif" href="/images/WellnessClub.avif">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/overrides.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Admin Page Layout */
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-6) var(--space-4);
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-8);
+            padding: var(--space-6);
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-600));
+            border-radius: var(--radius-xl);
+            color: white;
+        }
+
+        .dashboard-header h1 {
+            font-family: var(--font-display);
+            font-size: var(--text-4xl);
+            margin: 0;
+        }
+
+        .dashboard-header .welcome-text {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+            margin-top: var(--space-1);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        /* Dashboard Stats Grid */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-600);
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--primary-50);
+            border-radius: 50%;
+            transform: translate(40%, -40%);
+            opacity: 0.5;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 var(--space-2) 0;
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .stat-card .stat-value {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            color: var(--primary-900);
+            font-family: var(--font-display);
+        }
+
+        .stat-card .stat-change {
+            font-size: var(--text-sm);
+            margin-top: var(--space-2);
+            color: var(--success-700);
+            font-weight: 500;
+        }
+
+        .stat-card .stat-icon {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            font-size: var(--text-3xl);
+            opacity: 0.2;
+        }
+
+        /* Admin Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+            border-bottom: 2px solid var(--neutral-200);
+            background: white;
+            padding: var(--space-4) var(--space-4) 0;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-tab {
+            padding: var(--space-3) var(--space-6);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: var(--text-base);
+            font-weight: 500;
+            color: var(--neutral-600);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+        }
+
+        .admin-tab:hover {
+            color: var(--primary-700);
+            background: var(--primary-50);
+        }
+
+        .admin-tab.active {
+            color: var(--primary-700);
+            border-bottom-color: var(--primary-600);
+            background: var(--primary-50);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: var(--space-6);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn var(--transition-base);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Table Styling */
+        .products-table, .orders-table {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--neutral-200);
+        }
+
+        .products-table th, .orders-table th {
+            background: var(--neutral-100);
+            padding: var(--space-4);
+            text-align: left;
+            font-weight: 600;
+            color: var(--neutral-800);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .products-table td, .orders-table td {
+            padding: var(--space-4);
+            border-top: 1px solid var(--neutral-200);
+            vertical-align: middle;
+        }
+
+        .products-table tbody tr, .orders-table tbody tr {
+            transition: var(--transition-fast);
+        }
+
+        .products-table tbody tr:hover, .orders-table tbody tr:hover {
+            background: var(--primary-50);
+        }
+
+        /* Action Buttons in Tables */
+        .table-actions {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+        }
+
+        .btn-sm {
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-sm);
+        }
+
+        .btn-icon {
+            padding: var(--space-2);
+            min-width: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-select {
+            padding: var(--space-2) var(--space-3);
+            border: 1.5px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .status-select:hover {
+            border-color: var(--primary-500);
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-800);
+        }
+
+        .status-processing {
+            background: var(--info-100);
+            color: var(--info-800);
+        }
+
+        .status-shipped {
+            background: var(--success-100);
+            color: var(--success-800);
+        }
+
+        .status-delivered {
+            background: var(--success-200);
+            color: var(--success-900);
+        }
+
+        .status-cancelled {
+            background: var(--error-100);
+            color: var(--error-800);
+        }
+
+        .low-stock {
+            color: var(--error-700);
+            font-weight: 700;
+        }
+
+        /* Modal Enhancements */
+        .modal-overlay {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: var(--z-modal);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-base), visibility var(--transition-base);
+        }
+
+        .modal-overlay.show,
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-overlay .modal {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            transform: scale(0.95);
+            transition: transform var(--transition-base);
+        }
+
+        .modal-overlay.show .modal,
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-content {
+            position: relative;
+            display: block;
+        }
+
+        .admin-modal {
+            display: block !important;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-2xl);
+            padding: var(--space-6);
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-2);
+            font-weight: 600;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1.5px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+            transition: var(--transition-fast);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-6);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--neutral-200);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12) var(--space-4);
+            color: var(--neutral-500);
+        }
+
+        .empty-state-icon {
+            font-size: var(--text-6xl);
+            margin-bottom: var(--space-4);
+            opacity: 0.3;
+        }
+
+        /* Notification Toast */
+        .order-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-600);
+            color: white;
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            z-index: calc(var(--z-modal) + 1);
+            animation: slideInRight 0.3s ease;
+            font-weight: 500;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-4);
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .table-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;" class="brand-full">Tracy Talks Health</a></h1>
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;" class="brand-short">TTH</a></h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#services">What We Offer</a></li>
+                <li><a href="index.html#about">Meet Tracy</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div id="userDropdownContainer" style="display: none;"></div>
+                <a href="cart.html" class="cart-link" aria-label="Cart">
+                    <span class="cart-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M7.5 9.5V7.3C7.5 5.6 9 4.3 10.7 4.3H13.3C15 4.3 16.5 5.6 16.5 7.3V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                            <path d="M6 9.5H18L16.8 19.2C16.7 20 16 20.6 15.2 20.6H8.8C8 20.6 7.3 20 7.2 19.2L6 9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                            <path d="M9.5 13.4H14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                        </svg>
+                        <span class="cart-count" data-count="0">0</span>
+                    </span>
+                    <span class="cart-label">Cart</span>
+                </a>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Panel (shown after auth check) -->
+    <div id="adminPanel" style="display: block; padding-top: 100px;">
+        <div class="admin-container">
+            
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div>
+                    <h1>Admin Dashboard</h1>
+                    <p class="welcome-text">Manage your store, track orders, and monitor inventory</p>
+                </div>
+                <div class="dashboard-actions">
+                    <button onclick="loadDashboardStats()" class="btn btn-secondary">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <!-- Revenue Filter -->
+            <div class="revenue-filter-section" style="margin-bottom: 20px;">
+                <label for="revenuePeriod" style="margin-right: 10px; font-weight: 600;">Revenue Period:</label>
+                <select id="revenuePeriod" onchange="loadDashboardStats()" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; margin-right: 10px;">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month" selected>This Month</option>
+                    <option value="year">This Year</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+                <input type="date" id="startDate" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; margin-right: 10px; display: none;">
+                <input type="date" id="endDate" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; margin-right: 10px; display: none;">
+                <button onclick="loadDashboardStats()" id="applyDateBtn" style="padding: 8px 16px; background: #d4af8b; color: white; border: none; border-radius: 6px; cursor: pointer; display: none;">Apply</button>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <h3>Total Revenue</h3>
+                    <div class="stat-value" id="totalRevenue">$0.00</div>
+                    <div class="stat-change" id="revenueChange">This month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <h3>Orders Today</h3>
+                    <div class="stat-value" id="ordersToday">0</div>
+                    <div class="stat-change" id="ordersChange">New orders appear here</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <h3>Total Products</h3>
+                    <div class="stat-value" id="totalProducts">0</div>
+                    <div class="stat-change" id="lowStockAlert">Stock levels monitored</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <h3>Pending Orders</h3>
+                    <div class="stat-value" id="pendingOrders">0</div>
+                    <div class="stat-change" id="pendingChange">Needs attention</div>
+                </div>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="orders">📦 Orders</button>
+                <button class="admin-tab" data-tab="products">🛍️ Products</button>
+                <button class="admin-tab" data-tab="categories">📁 Categories</button>
+                <button class="admin-tab" data-tab="inventory">📊 Inventory</button>
+                <button class="admin-tab" data-tab="settings">⚙️ Settings</button>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="ordersTab" class="tab-content active">
+                <div style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Recent Orders</h3>
+                    <button onclick="loadOrders()" class="btn btn-secondary">🔄 Refresh Orders</button>
+                </div>
+                
+                <!-- Orders Filter Section -->
+                <div style="margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label for="orderDateFilter" style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Time Period:</label>
+                        <select id="orderDateFilter" onchange="applyOrderFilters()" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="year">This Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 200px;">
+                        <label for="orderStatusFilter" style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Order Status:</label>
+                        <select id="orderStatusFilter" onchange="applyOrderFilters()" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    
+                    <div id="customDateInputs" style="display: none; flex: 2; min-width: 300px; display: flex; gap: 10px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <label for="orderStartDate" style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">From:</label>
+                            <input type="date" id="orderStartDate" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="orderEndDate" style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">To:</label>
+                            <input type="date" id="orderEndDate" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
+                        <button onclick="applyOrderFilters()" style="padding: 8px 16px; background: #d4af8b; color: white; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap;">Apply Dates</button>
+                    </div>
+                    
+                    <div style="flex: 0 0 auto;">
+                        <button onclick="clearOrderFilters()" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 22px;">Clear Filters</button>
+                    </div>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📦</div><div>Loading orders...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="productsTab" class="tab-content">
+                <div style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Product Catalog</h3>
+                    <button id="addProductBtn" class="btn btn-primary">+ Add New Product</button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <tr><td colspan="6" class="empty-state"><div class="empty-state-icon">🛍️</div><div>Loading products...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Categories Tab -->
+            <div id="categoriesTab" class="tab-content">
+                <div style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Product Categories</h3>
+                    <button id="addCategoryBtn" class="btn btn-primary">➕ Add Category</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Description</th>
+                                <th>Products</th>
+                                <th>Order</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody">
+                            <tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📁</div><div>Loading categories...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="inventoryTab" class="tab-content">
+                <div style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Stock Management</h3>
+                    <button onclick="loadInventory()" class="btn btn-secondary">🔄 Refresh Inventory</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Current Stock</th>
+                                <th>Status</th>
+                                <th>Update Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <tr><td colspan="4" class="empty-state"><div class="empty-state-icon">📊</div><div>Loading inventory...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content">
+                <div style="margin-bottom: var(--space-4);">
+                    <h3 style="margin: 0 0 10px 0; font-family: var(--font-display); font-size: var(--text-2xl);">Shop Settings</h3>
+                    <p style="color: var(--neutral-600); margin: 0;">Configure shipping and tax rates for your store</p>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 800px;">
+                    <form id="settingsForm">
+                        <!-- Tax Rate -->
+                        <div class="form-group" style="margin-bottom: 25px;">
+                            <label for="taxRate" style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--neutral-800);">
+                                Tax Rate (%)
+                            </label>
+                            <input type="number" id="taxRate" step="0.01" min="0" max="100" 
+                                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;"
+                                   placeholder="10">
+                            <small style="color: var(--neutral-600); display: block; margin-top: 5px;">
+                                Enter tax rate as percentage (e.g., 10 for 10%)
+                            </small>
+                        </div>
+
+                        <!-- Shipping Fee -->
+                        <div class="form-group" style="margin-bottom: 25px;">
+                            <label for="shippingFee" style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--neutral-800);">
+                                Shipping Fee ($)
+                            </label>
+                            <input type="number" id="shippingFee" step="0.01" min="0" 
+                                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;"
+                                   placeholder="10.00">
+                            <small style="color: var(--neutral-600); display: block; margin-top: 5px;">
+                                Flat shipping fee for all orders
+                            </small>
+                        </div>
+
+                        <!-- Free Shipping Threshold -->
+                        <div class="form-group" style="margin-bottom: 25px;">
+                            <label for="freeShippingThreshold" style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--neutral-800);">
+                                Free Shipping Threshold ($)
+                            </label>
+                            <input type="number" id="freeShippingThreshold" step="0.01" min="0" 
+                                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;"
+                                   placeholder="100.00">
+                            <small style="color: var(--neutral-600); display: block; margin-top: 5px;">
+                                Orders above this amount get free shipping
+                            </small>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Save Settings</button>
+                            <button type="button" onclick="loadSettings()" class="btn btn-secondary">🔄 Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product Form Modal -->
+            <div id="productModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-content admin-modal">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+                            <h3 id="modalTitle" style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Add New Product</h3>
+                            <button class="close" onclick="closeProductModal()" style="background: none; border: none; font-size: var(--text-3xl); cursor: pointer; color: var(--neutral-500); line-height: 1;">&times;</button>
+                        </div>
+                        <form id="productForm">
+                            <input type="hidden" id="productId">
+                            
+                            <div class="form-group">
+                                <label for="productName">Product Name *</label>
+                                <input type="text" id="productName" placeholder="Enter product name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="productPrice">Price ($) *</label>
+                                <input type="number" id="productPrice" step="0.01" min="0" placeholder="0.00" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="productCategory">Category *</label>
+                                <select id="productCategory" required>
+                                    <option value="">Select category</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productStock">Initial Stock Quantity *</label>
+                                <input type="number" id="productStock" min="0" value="100" placeholder="100" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="productDescription">Description *</label>
+                                <textarea id="productDescription" rows="4" placeholder="Describe your product..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="productImage">Product Image *</label>
+                                <input type="file" id="productImage" accept="image/*" required>
+                                <small style="color: var(--neutral-600); display: block; margin-top: var(--space-2);">Accepted formats: JPG, PNG, AVIF, WebP (max 5MB)</small>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Detail Modal -->
+            <div id="orderModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-content admin-modal">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+                            <h3 style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Order Details</h3>
+                            <button class="close" onclick="closeOrderModal()" style="background: none; border: none; font-size: var(--text-3xl); cursor: pointer; color: var(--neutral-500); line-height: 1;">&times;</button>
+                        </div>
+                        <div id="orderDetails"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Modal -->
+            <div id="categoryModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-content admin-modal">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+                            <h3 id="categoryModalTitle" style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Add New Category</h3>
+                            <button class="close" onclick="closeCategoryModal()" style="background: none; border: none; font-size: var(--text-3xl); cursor: pointer; color: var(--neutral-500); line-height: 1;">&times;</button>
+                        </div>
+                        <form id="categoryForm">
+                            <input type="hidden" id="categoryId">
+                            
+                            <div class="form-group">
+                                <label for="categoryName">Category Name *</label>
+                                <input type="text" id="categoryName" required placeholder="e.g., Supplements">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="categorySlug">Slug *</label>
+                                <input type="text" id="categorySlug" required placeholder="e.g., supplements">
+                                <small style="color: var(--neutral-600); display: block; margin-top: var(--space-2);">URL-friendly identifier (lowercase, no spaces)</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="categoryDescription">Description</label>
+                                <textarea id="categoryDescription" rows="3" placeholder="Brief description of this category"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="categoryOrder">Display Order</label>
+                                <input type="number" id="categoryOrder" value="1" min="1">
+                                <small style="color: var(--neutral-600); display: block; margin-top: var(--space-2);">Lower numbers appear first</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="categoryActive" checked>
+                                    Active (visible in shop)
+                                </label>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Category</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer" style="margin-top: var(--space-12);">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Accessibility</a>
+                    </div>
+                    <p>&copy; 2026 Tracy Talks Health. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

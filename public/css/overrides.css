@@ -1,0 +1,478 @@
+/**
+ * DESIGN SYSTEM OVERRIDES
+ * These styles ensure the new design system takes precedence over old styles.css
+ * Load this AFTER components.css and BEFORE page-specific styles
+ */
+
+/* Force new button styles */
+.btn,
+button.btn,
+.btn-primary,
+.btn-secondary,
+.btn-outline,
+.btn-ghost {
+    font-family: var(--font-body) !important;
+    transition: all var(--transition-base) !important;
+}
+
+.btn-primary,
+button.btn-primary {
+    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-600) 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: var(--shadow-primary) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 35px -8px rgba(47, 75, 87, 0.25) !important;
+}
+
+.btn-secondary,
+button.btn-secondary {
+    background: linear-gradient(135deg, var(--secondary-600) 0%, var(--secondary-500) 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: var(--shadow-secondary) !important;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 35px -8px rgba(181, 121, 74, 0.25) !important;
+}
+
+/* Order Summary Styling */
+.order-summary {
+    background: white !important;
+    border-radius: var(--radius-2xl) !important;
+    padding: var(--space-8) !important;
+    box-shadow: var(--shadow-soft) !important;
+}
+
+.order-summary h2 {
+    font-family: var(--font-display) !important;
+    font-size: var(--text-2xl) !important;
+    color: var(--neutral-900) !important;
+    margin-bottom: var(--space-6) !important;
+}
+
+.summary-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: var(--space-3) 0 !important;
+    color: var(--neutral-700) !important;
+    font-size: var(--text-base) !important;
+}
+
+.summary-row.total {
+    border-top: 2px solid var(--neutral-200) !important;
+    margin-top: var(--space-4) !important;
+    padding-top: var(--space-4) !important;
+    font-size: var(--text-lg) !important;
+    font-weight: var(--font-semibold) !important;
+    color: var(--primary-700) !important;
+}
+
+/* Place Order Button */
+.place-order-btn {
+    width: 100% !important;
+    padding: var(--space-4) var(--space-6) !important;
+    margin-top: var(--space-6) !important;
+    font-size: var(--text-lg) !important;
+    border-radius: var(--radius-lg) !important;
+}
+
+/* Checkout Form */
+.checkout-container {
+    max-width: var(--container-xl) !important;
+    margin: 0 auto !important;
+    padding: var(--space-8) var(--space-6) !important;
+}
+
+.form-section {
+    background: white !important;
+    border-radius: var(--radius-2xl) !important;
+    padding: var(--space-8) !important;
+    box-shadow: var(--shadow-soft) !important;
+    margin-bottom: var(--space-6) !important;
+}
+
+.form-section h2 {
+    font-family: var(--font-display) !important;
+    font-size: var(--text-2xl) !important;
+    color: var(--neutral-900) !important;
+    margin-bottom: var(--space-6) !important;
+}
+
+/* Alert Box */
+.alert-box {
+    padding: var(--space-4) var(--space-5) !important;
+    border-radius: var(--radius-lg) !important;
+    margin-bottom: var(--space-5) !important;
+}
+
+.alert-box.warning {
+    background: var(--warning-100) !important;
+    color: var(--warning-900) !important;
+    border: 1px solid var(--warning-300) !important;
+}
+
+/* Payment Section */
+#card-element {
+    padding: var(--space-4) !important;
+    border: 1.5px solid var(--neutral-300) !important;
+    border-radius: var(--radius-md) !important;
+    background: white !important;
+}
+
+/* Order Items */
+.order-items {
+    margin-bottom: var(--space-5) !important;
+}
+
+.order-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: var(--space-4) 0 !important;
+    border-bottom: 1px solid var(--neutral-200) !important;
+}
+
+.order-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Success Modal */
+.success-icon {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    background: var(--success-100) !important;
+    color: var(--success-600) !important;
+    font-size: var(--text-5xl) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto var(--space-6) !important;
+}
+
+/* Modern Card Styling */
+.payment-info-card,
+.areeba-payment-info,
+.cash-on-delivery {
+    background: white !important;
+    border-radius: var(--radius-xl) !important;
+    padding: var(--space-6) !important;
+    box-shadow: var(--shadow-md) !important;
+    margin: var(--space-4) 0 !important;
+}
+
+/* Test Mode Warning */
+.test-mode-warning {
+    background: var(--warning-100) !important;
+    border: 1px solid var(--warning-300) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--space-4) !important;
+    color: var(--warning-900) !important;
+    margin-bottom: var(--space-4) !important;
+}
+
+/* Ensure all buttons are clickable */
+button,
+.btn,
+a.btn,
+#authButton {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    user-select: none !important;
+}
+
+/* Account Button - Force consistent styling across all pages */
+#authButton.btn-outline {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: var(--space-2) var(--space-4) !important;
+    background: transparent !important;
+    color: var(--primary-700) !important;
+    border: 1.5px solid var(--primary-600) !important;
+    border-radius: var(--radius-lg) !important;
+    font-family: var(--font-body) !important;
+    font-size: var(--text-base) !important;
+    font-weight: var(--font-medium) !important;
+    transition: all var(--transition-fast) !important;
+}
+
+#authButton.btn-outline:hover {
+    background: var(--primary-50) !important;
+    border-color: var(--primary-700) !important;
+    transform: translateY(-1px) !important;
+}
+
+button:disabled,
+.btn:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+/* Navigation Links */
+.nav-menu a {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    z-index: var(--z-fixed) !important;
+}
+
+/* Modal Close Button */
+.modal-close {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    z-index: 1 !important;
+}
+
+/* Cart Icon */
+.cart-link {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* Make sure modals are above everything */
+.modal-overlay {
+    z-index: var(--z-modal-backdrop) !important;
+}
+
+.modal-overlay .modal {
+    z-index: var(--z-modal) !important;
+    position: relative !important;
+}
+
+/* User Dropdown Menu */
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: white;
+    border: 1.5px solid var(--primary-600);
+    border-radius: var(--radius-lg);
+    color: var(--primary-700);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.user-menu-toggle:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-700);
+}
+
+.user-menu-toggle svg {
+    flex-shrink: 0;
+}
+
+.dropdown-arrow {
+    transition: transform var(--transition-fast);
+}
+
+.user-menu-toggle:hover .dropdown-arrow {
+    transform: translateY(2px);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    min-width: 240px;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-base);
+    z-index: var(--z-dropdown);
+    overflow: hidden;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown-header {
+    padding: var(--space-4);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+    border-bottom: 1px solid var(--primary-200);
+}
+
+.user-dropdown-header strong {
+    display: block;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--primary-900);
+    margin-bottom: var(--space-1);
+}
+
+.user-dropdown-header small {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--primary-700);
+}
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: transparent;
+    border: none;
+    color: var(--neutral-700);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.user-dropdown-item:hover {
+    background: var(--neutral-50);
+    color: var(--primary-700);
+}
+
+.user-dropdown-item svg {
+    flex-shrink: 0;
+    color: var(--neutral-500);
+    transition: color var(--transition-fast);
+}
+
+.user-dropdown-item:hover svg {
+    color: var(--primary-600);
+}
+
+.user-dropdown-item.admin-item {
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+    color: var(--primary-700);
+    font-weight: 600;
+    border: 1px solid var(--primary-200);
+    margin-bottom: 4px;
+}
+
+.user-dropdown-item.admin-item:hover {
+    background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+    color: var(--primary-800);
+    border-color: var(--primary-300);
+    transform: translateX(2px);
+}
+
+.user-dropdown-item.admin-item svg {
+    color: var(--primary-600);
+}
+
+.user-dropdown-item.admin-item:hover svg {
+    color: var(--primary-700);
+}
+
+.user-dropdown-item.logout-btn {
+    border-top: 1px solid var(--neutral-200);
+    color: var(--error-600);
+}
+
+.user-dropdown-item.logout-btn:hover {
+    background: var(--error-50);
+    color: var(--error-700);
+}
+
+.user-dropdown-item.logout-btn svg {
+    color: var(--error-500);
+}
+
+.user-dropdown-item.logout-btn:hover svg {
+    color: var(--error-700);
+}
+/* Admin Modals - Enhanced Styling */
+#productModal.modal-overlay,
+#orderModal.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: var(--z-modal);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+#productModal.modal-overlay.show,
+#orderModal.modal-overlay.show {
+    opacity: 1;
+}
+
+#productModal .modal,
+#orderModal .modal {
+    display: block;
+    position: relative;
+    inset: auto;
+    width: auto;
+    height: auto;
+    background: transparent;
+    transform: scale(0.95);
+    transition: transform var(--transition-base);
+}
+
+#productModal.modal-overlay.show .modal,
+#orderModal.modal-overlay.show .modal {
+    transform: scale(1);
+}
+
+/* User Dropdown Toggle - Enhanced */
+.user-menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: white;
+    border: 1.5px solid var(--primary-300);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--primary-700);
+}
+
+.user-menu-toggle:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+.user-menu-toggle .user-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--primary-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--primary-700);
+}
