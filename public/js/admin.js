@@ -230,8 +230,10 @@ async function loadProducts() {
             <td>$${parseFloat(product.price).toFixed(2)}</td>
             <td class="${stockClass}">${stock} ${stock < 10 ? '⚠️' : ''}</td>
             <td>
-                <button onclick="editProduct('${product.id}')" class="btn btn-secondary" style="margin-right:5px;">Edit</button>
-                <button onclick="deleteProduct('${product.id}')" class="btn btn-secondary">Delete</button>
+                <div class="table-actions">
+                    <button onclick="editProduct('${product.id}')" class="btn btn-secondary btn-sm">Edit</button>
+                    <button onclick="deleteProduct('${product.id}')" class="btn btn-secondary btn-sm">Delete</button>
+                </div>
             </td>
         </tr>
     `;
@@ -737,21 +739,22 @@ function escapeHtml(text) {
 }
 
 function showNotification(message) {
-    // Remove existing notification
-    const existing = document.querySelector('.order-notification');
-    if (existing) existing.remove();
-    
-    // Create new notification
-    const notification = document.createElement('div');
-    notification.className = 'order-notification';
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    // Remove after 5 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideIn 0.3s ease reverse';
-        setTimeout(() => notification.remove(), 300);
-    }, 5000);
+    // Use the global notification system instead of custom order-notification
+    if (window.notify) {
+        notify.info(message, 5000);
+    } else {
+        // Fallback if notification system not loaded
+        const notification = document.createElement('div');
+        notification.className = 'order-notification';
+        notification.style.cssText = 'background: rgb(255, 255, 255) !important; background-color: rgb(0, 0, 0) !important;';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
 }
 
 // ========================================
@@ -781,12 +784,34 @@ async function loadSettings() {
 }
 
 async function saveSettings(e) {
+    console.log('saveSettings called');
     e.preventDefault();
     
     try {
-        const taxRate = parseFloat(document.getElementById('taxRate').value) / 100; // Convert 10 to 0.1
-        const shippingFee = parseFloat(document.getElementById('shippingFee').value) * 100; // Convert to cents
-        const freeShippingThreshold = parseFloat(document.getElementById('freeShippingThreshold').value) * 100;
+        const taxRateInput = document.getElementById('taxRate');
+        const shippingFeeInput = document.getElementById('shippingFee');
+        const freeShippingThresholdInput = document.getElementById('freeShippingThreshold');
+        
+        console.log('Inputs:', { taxRateInput, shippingFeeInput, freeShippingThresholdInput });
+        
+        if (!taxRateInput || !shippingFeeInput || !freeShippingThresholdInput) {
+            notify.error('Form inputs not found');
+            return;
+        }
+        
+        const taxRate = parseFloat(taxRateInput.value) / 100; // Convert 10 to 0.1
+        const shippingFee = parseFloat(shippingFeeInput.value) * 100; // Convert to cents
+        const freeShippingThreshold = parseFloat(freeShippingThresholdInput.value) * 100;
+        
+        console.log('Values:', { taxRate, shippingFee, freeShippingThreshold });
+        
+        // Validate inputs
+        if (isNaN(taxRate) || isNaN(shippingFee) || isNaN(freeShippingThreshold)) {
+            notify.error('Please enter valid numbers');
+            return;
+        }
+        
+        console.log('Updating settings...');
         
         // Update each setting
         await Promise.all([
@@ -795,7 +820,9 @@ async function saveSettings(e) {
             api.admin.updateSetting('free_shipping_threshold_cents', Math.round(freeShippingThreshold))
         ]);
         
+        console.log('Settings updated successfully');
         notify.success('Settings updated successfully!');
+        loadSettings(); // Reload to show updated values
     } catch (error) {
         console.error('Error saving settings:', error);
         notify.error('Failed to save settings: ' + (error.message || 'Unknown error'));
@@ -852,9 +879,9 @@ async function loadCategories() {
                     </span>
                 </td>
                 <td>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-icon edit-category-btn" title="Edit" data-id="${category.id}">✏️</button>
-                        <button class="btn-icon delete-category-btn" title="Delete" data-id="${category.id}" data-name="${escapeHtml(category.name)}">🗑️</button>
+                    <div class="table-actions">
+                        <button class="btn btn-secondary btn-sm edit-category-btn" data-id="${category.id}">Edit</button>
+                        <button class="btn btn-secondary btn-sm delete-category-btn" data-id="${category.id}" data-name="${escapeHtml(category.name)}">Delete</button>
                     </div>
                 </td>
             </tr>
@@ -1087,7 +1114,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Settings form
     const settingsForm = document.getElementById('settingsForm');
     if (settingsForm) {
+        console.log('Settings form found, attaching event listener');
         settingsForm.addEventListener('submit', saveSettings);
+    } else {
+        console.error('Settings form not found!');
     }
     
     // Category form

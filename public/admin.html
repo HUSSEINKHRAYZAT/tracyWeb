@@ -334,7 +334,7 @@
         }
         
         .admin-modal .modal-header {
-            padding: 28px 40px;
+            padding: 32px 48px;
             border-bottom: 1px solid #f1f5f9;
             position: sticky;
             top: 0;
@@ -350,7 +350,7 @@
         }
         
         .admin-modal .modal-body {
-            padding: 40px;
+            padding: 48px;
             max-height: calc(90vh - 220px);
             overflow-y: auto;
             overflow-x: hidden;
@@ -378,8 +378,8 @@
         .admin-modal .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            margin-bottom: 28px;
+            gap: 32px;
+            margin-bottom: 32px;
         }
         
         .admin-modal .form-row .form-group {
@@ -387,7 +387,7 @@
         }
         
         .admin-modal .form-group {
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
         
         .admin-modal .form-group label {
@@ -592,7 +592,7 @@
         
         /* Form Actions (Sticky Footer) */
         .form-actions {
-            padding: 24px 40px;
+            padding: 28px 48px;
             background: white;
             border-top: 1px solid #f1f5f9;
             display: flex;
@@ -766,6 +766,48 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        /* Custom Checkbox Styling */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .checkbox-wrapper:hover {
+            border-color: #14b8a6;
+            background: #f0fdfa;
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #14b8a6;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-wrapper .checkbox-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+        
+        .checkbox-wrapper .checkbox-description {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
         }
 
         /* Responsive */
@@ -1185,11 +1227,12 @@
             <!-- Category Modal -->
             <div id="categoryModal" class="modal-overlay">
                 <div class="modal-content admin-modal">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
-                            <h3 id="categoryModalTitle" style="margin: 0; font-family: var(--font-display); font-size: var(--text-2xl);">Add New Category</h3>
-                            <button class="close" onclick="closeCategoryModal()" style="background: none; border: none; font-size: var(--text-3xl); cursor: pointer; color: var(--neutral-500); line-height: 1;">&times;</button>
-                        </div>
-                        <form id="categoryForm">
+                    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 id="categoryModalTitle" style="margin: 0;">Add New Category</h3>
+                        <button class="close" onclick="closeCategoryModal()" style="background: none; border: none; font-size: 32px; cursor: pointer; color: #94a3b8; line-height: 1; transition: color 0.2s;" onmouseover="this.style.color='#64748b'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+                    </div>
+                    <form id="categoryForm">
+                        <div class="modal-body">
                             <input type="hidden" id="categoryId">
                             
                             <div class="form-group">
@@ -1200,7 +1243,7 @@
                             <div class="form-group">
                                 <label for="categorySlug">Slug *</label>
                                 <input type="text" id="categorySlug" required placeholder="e.g., supplements">
-                                <small style="color: var(--neutral-600); display: block; margin-top: var(--space-2);">URL-friendly identifier (lowercase, no spaces)</small>
+                                <small style="color: #64748b; display: block; margin-top: 8px; font-size: 13px;">URL-friendly identifier (lowercase, no spaces)</small>
                             </div>
                             
                             <div class="form-group">
@@ -1211,22 +1254,26 @@
                             <div class="form-group">
                                 <label for="categoryOrder">Display Order</label>
                                 <input type="number" id="categoryOrder" value="1" min="1">
-                                <small style="color: var(--neutral-600); display: block; margin-top: var(--space-2);">Lower numbers appear first</small>
+                                <small style="color: #64748b; display: block; margin-top: 8px; font-size: 13px;">Lower numbers appear first</small>
                             </div>
                             
                             <div class="form-group">
-                                <label>
+                                <label class="checkbox-wrapper">
                                     <input type="checkbox" id="categoryActive" checked>
-                                    Active (visible in shop)
+                                    <div>
+                                        <div class="checkbox-label">Active Status</div>
+                                        <div class="checkbox-description">Category will be visible in the shop</div>
+                                    </div>
                                 </label>
                             </div>
-                            
-                            <div class="form-actions">
-                                <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save Category</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">💾 Save Category</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
         </div>

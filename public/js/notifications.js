@@ -23,20 +23,28 @@ class NotificationSystem {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         
+        // Force inline styles for solid white background - override all CSS
+        notification.style.backgroundColor = 'rgb(255, 255, 255)';
+        notification.style.background = 'rgb(255, 255, 255)';
+        notification.style.color = 'rgb(15, 23, 42)';
+        
         const icon = this.getIcon(type);
         
         notification.innerHTML = `
             <div class="notification-icon">${icon}</div>
             <div class="notification-content">
-                <p class="notification-message">${message}</p>
+                <p class="notification-message" style="color: rgb(15, 23, 42) !important;">${message}</p>
             </div>
             <button class="notification-close" aria-label="Close">×</button>
         `;
 
         this.container.appendChild(notification);
 
-        // Trigger animation
-        setTimeout(() => notification.classList.add('show'), 10);
+        // Trigger animation with full opacity
+        setTimeout(() => {
+            notification.classList.add('show');
+            notification.style.opacity = '1';
+        }, 10);
 
         // Close button functionality
         const closeBtn = notification.querySelector('.notification-close');
