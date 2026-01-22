@@ -73,6 +73,7 @@ exports.listProducts = async (req, res, next) => {
                 id: p.id,
                 name: p.name,
                 slug: p.slug,
+                description: p.description,
                 price: parseFloat(p.price),
                 stock: p.stock_quantity,
                 sku: p.sku,

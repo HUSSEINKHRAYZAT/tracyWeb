@@ -1,0 +1,30 @@
+# Local Netlify folder
+.netlify
+
+# Security - Never commit these
+.env
+.env.local
+.env.production
+backend/.env
+backend/.env.production
+
+# Admin scripts (server-side only)
+scripts/promote-admin.sh
+
+# Sensitive data
+*.pem
+*.key
+*.log
+
+# Node modules
+node_modules/
+backend/node_modules/
+
+# Database
+*.db
+*.sqlite
+*.sql.gz
+
+# OS files
+.DS_Store
+Thumbs.db

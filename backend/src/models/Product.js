@@ -246,6 +246,56 @@ class Product {
         const result = await pool.query(query, [id]);
         return result.rows[0] || null;
     }
+
+    /**
+     * Decrement stock quantity for a product
+     * @param {string} id - Product ID
+     * @param {number} quantity - Quantity to decrement
+     * @param {object} client - Optional database client for transactions
+     * @returns {object} Updated product with new stock quantity
+     */
+    static async decrementStock(id, quantity, client = null) {
+        const db = client || pool;
+        
+        const query = `
+            UPDATE products
+            SET stock_quantity = stock_quantity - $2,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $1 AND deleted_at IS NULL
+            AND stock_quantity >= $2
+            RETURNING id, name, stock_quantity
+        `;
+
+        const result = await db.query(query, [id, quantity]);
+        
+        if (!result.rows[0]) {
+            throw new Error(`Insufficient stock for product ${id}`);
+        }
+        
+        return result.rows[0];
+    }
+
+    /**
+     * Increment stock quantity for a product (for refunds/cancellations)
+     * @param {string} id - Product ID
+     * @param {number} quantity - Quantity to increment
+     * @param {object} client - Optional database client for transactions
+     * @returns {object} Updated product with new stock quantity
+     */
+    static async incrementStock(id, quantity, client = null) {
+        const db = client || pool;
+        
+        const query = `
+            UPDATE products
+            SET stock_quantity = stock_quantity + $2,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $1 AND deleted_at IS NULL
+            RETURNING id, name, stock_quantity
+        `;
+
+        const result = await db.query(query, [id, quantity]);
+        return result.rows[0] || null;
+    }
 }
 
 module.exports = Product;

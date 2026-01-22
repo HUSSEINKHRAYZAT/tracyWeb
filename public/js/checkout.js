@@ -321,6 +321,7 @@ async function handleCheckout(e) {
             const orderResponse = await api.createOrder(orderData);
             currentOrder = orderResponse.data.order;
             console.log('Order created:', currentOrder);
+            console.log('Order number property:', currentOrder.orderNumber, currentOrder.order_number);
             
             // Create payment intent
             const paymentIntentResponse = await api.createPaymentIntent(currentOrder.id);
@@ -354,6 +355,9 @@ async function handleCheckout(e) {
             if (paymentProvider === 'cash') {
                 // Cash on Delivery - no payment intent needed
                 const cardContainer = document.getElementById('card-element');
+                const orderAmount = paymentIntentResponse.data.amount || 0;
+                const orderNumber = currentOrder.orderNumber || 'N/A';
+                
                 cardContainer.innerHTML = `
                     <div class="cash-payment-info">
                         <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; border: 2px solid #22c55e;">
@@ -364,10 +368,10 @@ async function handleCheckout(e) {
                                 <h3 style="margin: 0; color: #15803d; font-size: 18px;">Cash on Delivery</h3>
                             </div>
                             <p style="margin: 0 0 10px 0; color: #15803d;">
-                                <strong>Amount to pay:</strong> $${paymentIntentResponse.data.amount ? paymentIntentResponse.data.amount.toFixed(2) : '0.00'}
+                                <strong>Amount:</strong> $${orderAmount.toFixed(2)}
                             </p>
                             <p style="margin: 0; color: #15803d; font-size: 14px;">
-                                <strong>Order:</strong> ${currentOrder.order_number}
+                                <strong>Order:</strong> ${orderNumber}
                             </p>
                         </div>
                         <div style="margin-top: 15px; padding: 15px; background: #fffbeb; border-radius: 8px; border: 1px solid #fbbf24;">
@@ -389,6 +393,9 @@ async function handleCheckout(e) {
             if (paymentProvider === 'stripe') {
                 // Show Stripe payment info
                 const cardContainer = document.getElementById('card-element');
+                const orderAmount = paymentIntentResponse.data.amount || 0;
+                const orderNumber = currentOrder.orderNumber || 'N/A';
+                
                 cardContainer.innerHTML = `
                     <div class="stripe-payment-info">
                         <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border: 2px solid #635bff;">
@@ -399,10 +406,10 @@ async function handleCheckout(e) {
                                 <h3 style="margin: 0; color: #635bff; font-size: 18px;">Secure Card Payment - Stripe</h3>
                             </div>
                             <p style="margin: 0 0 10px 0; color: #635bff;">
-                                <strong>Amount:</strong> $${paymentIntentResponse.data.amount ? paymentIntentResponse.data.amount.toFixed(2) : '0.00'}
+                                <strong>Amount:</strong> $${orderAmount.toFixed(2)}
                             </p>
                             <p style="margin: 0; color: #635bff; font-size: 14px;">
-                                <strong>Order:</strong> ${currentOrder.order_number}
+                                <strong>Order:</strong> ${orderNumber}
                             </p>
                         </div>
                         <div style="margin-top: 15px; padding: 15px; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
@@ -426,24 +433,74 @@ async function handleCheckout(e) {
                 const cardContainer = document.getElementById('card-element');
                 const paymentUrl = paymentIntentResponse.data.payment_url;
                 
-                cardContainer.innerHTML = `
-                    <div class="whish-payment-info">
-                        <p style="margin-bottom: 15px; color: #666;">
-                            You will be redirected to Whish Money to complete your payment securely.
-                        </p>
-                        <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border: 1px solid #bae6fd;">
-                            <p style="margin: 0; font-size: 14px; color: #0c4a6e;">
-                                <strong>Amount:</strong> ${(currentOrder.total_cents / 1).toLocaleString()} LBP<br>
-                                <strong>Order:</strong> ${currentOrder.order_number}
-                            </p>
+                // Check if we have a payment URL (real Whish) or use test mode
+                if (paymentUrl && paymentUrl !== 'test' && paymentUrl !== 'undefined') {
+                    // Production mode - redirect to Whish
+                    const orderAmount = paymentIntentResponse.data.amount || 0;
+                    const orderNumber = currentOrder.orderNumber || 'N/A';
+                    
+                    cardContainer.innerHTML = `
+                        <div class="whish-payment-info">
+                            <div style="background: #fef3c7; padding: 20px; border-radius: 8px; border: 2px solid #f59e0b;">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <svg style="width: 24px; height: 24px; color: #d97706; margin-right: 10px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                    </svg>
+                                    <h3 style="margin: 0; color: #92400e; font-size: 18px;">Secure Payment - Whish Money</h3>
+                                </div>
+                                <p style="margin: 0 0 10px 0; color: #92400e;">
+                                    <strong>Amount:</strong> $${orderAmount.toFixed(2)}
+                                </p>
+                                <p style="margin: 0; color: #92400e; font-size: 14px;">
+                                    <strong>Order:</strong> ${orderNumber}
+                                </p>
+                            </div>
+                            <div style="margin-top: 15px; padding: 15px; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
+                                <p style="margin: 0; font-size: 14px; color: #166534;">
+                                    <strong>✓ Secure Payment</strong><br>
+                                    • Powered by Whish Money<br>
+                                    • SSL encrypted<br>
+                                    • Multiple payment methods<br>
+                                    • Instant confirmation
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                `;
-                
-                // Store payment URL
-                submitBtn.dataset.paymentUrl = paymentUrl;
-                submitBtn.dataset.paymentId = paymentIntentResponse.data.paymentIntentId;
-                buttonText.textContent = 'Continue to Whish Payment';
+                    `;
+                    
+                    submitBtn.dataset.paymentUrl = paymentUrl;
+                    submitBtn.dataset.paymentId = paymentIntentResponse.data.paymentIntentId;
+                    buttonText.textContent = 'Continue to Whish Payment';
+                } else {
+                    // Test mode - show test payment UI
+                    const orderAmount = paymentIntentResponse.data.amount || 0;
+                    const orderNumber = currentOrder.orderNumber || 'N/A';
+                    
+                    cardContainer.innerHTML = `
+                        <div class="whish-test-mode">
+                            <div style="background: #fef3c7; padding: 15px; border-radius: 8px; border: 1px solid #fbbf24; margin-bottom: 15px;">
+                                <p style="margin: 0; font-size: 14px; color: #92400e;">
+                                    <strong>⚠️ TEST MODE</strong> - Whish credentials not configured. Using test payment.
+                                </p>
+                            </div>
+                            <div style="padding: 20px; background: white; border: 1px solid #e5e7eb; border-radius: 8px;">
+                                <h3 style="margin: 0 0 15px 0; color: #1f2937;">Test Card Payment</h3>
+                                <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
+                                    <strong>Amount:</strong> $${orderAmount.toFixed(2)}
+                                </p>
+                                <p style="color: #6b7280; font-size: 14px; margin-bottom: 15px;">
+                                    <strong>Order:</strong> ${orderNumber}
+                                </p>
+                                <p style="color: #6b7280; font-size: 14px;">
+                                    In production, this will redirect to Whish Money's secure payment page.<br>
+                                    Configure WHISH_MERCHANT_ID and WHISH_API_KEY in .env file.
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    submitBtn.dataset.sessionId = paymentIntentResponse.data.session_id;
+                    buttonText.textContent = 'Complete Test Payment';
+                }
                 
             } else if (paymentProvider === 'areeba') {
                 // Show Areeba payment form
@@ -452,6 +509,9 @@ async function handleCheckout(e) {
                 // Check if we have a checkout URL (real Areeba) or use embedded form (test mode)
                 if (paymentIntentResponse.data.checkout_url) {
                     // Redirect to Areeba hosted checkout
+                    const orderAmount = paymentIntentResponse.data.amount || 0;
+                    const orderNumber = currentOrder.orderNumber || 'N/A';
+                    
                     cardContainer.innerHTML = `
                         <div class="areeba-payment-info">
                             <div style="background: #eff6ff; padding: 20px; border-radius: 8px; border: 2px solid #60a5fa;">
@@ -462,10 +522,10 @@ async function handleCheckout(e) {
                                     <h3 style="margin: 0; color: #1e40af; font-size: 18px;">Secure Card Payment - Areeba</h3>
                                 </div>
                                 <p style="margin: 0 0 10px 0; color: #1e40af;">
-                                    <strong>Amount:</strong> $${paymentIntentResponse.data.amount ? paymentIntentResponse.data.amount.toFixed(2) : '0.00'}
+                                    <strong>Amount:</strong> $${orderAmount.toFixed(2)}
                                 </p>
                                 <p style="margin: 0; color: #1e40af; font-size: 14px;">
-                                    <strong>Order:</strong> ${currentOrder.order_number}
+                                    <strong>Order:</strong> ${orderNumber}
                                 </p>
                             </div>
                             <div style="margin-top: 15px; padding: 15px; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
@@ -485,6 +545,9 @@ async function handleCheckout(e) {
                     buttonText.textContent = 'Pay with Card';
                 } else {
                     // Test mode - show simple card input
+                    const orderAmount = paymentIntentResponse.data.amount || 0;
+                    const orderNumber = currentOrder.orderNumber || 'N/A';
+                    
                     cardContainer.innerHTML = `
                         <div class="areeba-test-mode">
                             <div style="background: #fef3c7; padding: 15px; border-radius: 8px; border: 1px solid #fbbf24; margin-bottom: 15px;">
@@ -494,8 +557,11 @@ async function handleCheckout(e) {
                             </div>
                             <div style="padding: 20px; background: white; border: 1px solid #e5e7eb; border-radius: 8px;">
                                 <h3 style="margin: 0 0 15px 0; color: #1f2937;">Test Card Payment</h3>
+                                <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
+                                    <strong>Amount:</strong> $${orderAmount.toFixed(2)}
+                                </p>
                                 <p style="color: #6b7280; font-size: 14px; margin-bottom: 15px;">
-                                    Amount: <strong>$${paymentIntentResponse.data.amount ? paymentIntentResponse.data.amount.toFixed(2) : '0.00'}</strong>
+                                    <strong>Order:</strong> ${orderNumber}
                                 </p>
                                 <p style="color: #6b7280; font-size: 14px;">
                                     In production, this will redirect to Areeba's secure payment page.<br>
@@ -544,7 +610,17 @@ async function handleCheckout(e) {
             console.log('Stripe session ID:', sessionId);
             await processStripePayment(checkoutUrl, sessionId);
         } else if (paymentProvider === 'whish') {
-            await processWhishPayment(submitBtn.dataset.paymentUrl, submitBtn.dataset.paymentId);
+            const paymentUrl = submitBtn.dataset.paymentUrl;
+            const sessionId = submitBtn.dataset.sessionId;
+            // Check if we have a real payment URL or test mode session ID
+            if (paymentUrl && paymentUrl !== 'undefined') {
+                await processWhishPayment(paymentUrl, submitBtn.dataset.paymentId);
+            } else if (sessionId) {
+                // Test mode - use session ID
+                await processWhishPayment('test', sessionId);
+            } else {
+                showError('Payment configuration error');
+            }
         } else if (paymentProvider === 'areeba') {
             await processAreebaPayment(submitBtn.dataset.checkoutUrl, submitBtn.dataset.sessionId);
         }
@@ -631,7 +707,19 @@ async function processWhishPayment(paymentUrl, paymentId) {
     try {
         console.log('processWhishPayment called with URL:', paymentUrl);
         console.log('Payment ID:', paymentId);
-        setLoading(true, 'Redirecting to payment...');
+        setLoading(true, 'Processing payment...');
+        
+        // Check if test mode
+        if (paymentUrl === 'test') {
+            // Test mode - simulate payment success
+            await api.clearCart();
+            showMessage('Test payment completed! Order confirmed.', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'orders.html';
+            }, 2000);
+            return;
+        }
         
         if (!paymentUrl || paymentUrl === 'null' || paymentUrl === 'undefined') {
             console.error('Invalid payment URL:', paymentUrl);

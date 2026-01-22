@@ -329,6 +329,9 @@ function showProductModal(productId = null) {
     const modal = document.getElementById('productModal');
     const form = document.getElementById('productForm');
     const modalTitle = document.getElementById('modalTitle');
+    const currentImagesSection = document.getElementById('currentImagesSection');
+    const imageOptionalNote = document.getElementById('imageOptionalNote');
+    const imageRequiredLabel = document.getElementById('imageRequiredLabel');
     
     if (!modal || !form || !modalTitle) {
         console.error('Modal elements not found!');
@@ -343,14 +346,49 @@ function showProductModal(productId = null) {
                 const product = products.find(p => p.id === productId);
                 
                 if (product) {
+                    console.log('Editing product:', product);
+                    console.log('Product description value:', product.description);
+                    console.log('All product keys:', Object.keys(product));
+                    
                     document.getElementById('productId').value = product.id;
-                    document.getElementById('productName').value = product.name;
-                    document.getElementById('productPrice').value = product.price;
-                    document.getElementById('productDescription').value = product.description || '';
+                    document.getElementById('productName').value = product.name || '';
+                    document.getElementById('productPrice').value = product.price || '';
+                    
+                    // Try multiple possible field names for description
+                    const description = product.description || product.desc || product.details || '';
+                    console.log('Setting description to:', description);
+                    document.getElementById('productDescription').value = description;
+                    
                     document.getElementById('productStock').value = product.stock || product.stockQuantity || 100;
                     document.getElementById('productCategory').value = product.categoryId || product.category_id || '';
+                    
+                    // Display current images with remove icons
+                    if (product.images && product.images.length > 0) {
+                        const currentImagesPreview = document.getElementById('currentImagesPreview');
+                        currentImagesPreview.innerHTML = product.images.map(img => `
+                            <div class="image-preview-card">
+                                <img src="${img.url}" alt="${product.name}">
+                                <div class="remove-icon" onclick="removeProductImage(${product.id}, '${img.url}')">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        `).join('');
+                        currentImagesSection.style.display = 'block';
+                    } else {
+                        currentImagesSection.style.display = 'none';
+                    }
+                    
                     // Make image optional for edit
                     document.getElementById('productImage').removeAttribute('required');
+                    imageOptionalNote.style.display = 'block';
+                    imageRequiredLabel.style.display = 'none';
+                    
+                    // Update character counter
+                    updateCharacterCount();
+                } else {
+                    console.error('Product not found:', productId);
                 }
             });
         } else {
@@ -358,6 +396,12 @@ function showProductModal(productId = null) {
             form.reset();
             document.getElementById('productId').value = '';
             document.getElementById('productImage').setAttribute('required', 'required');
+            currentImagesSection.style.display = 'none';
+            imageOptionalNote.style.display = 'none';
+            imageRequiredLabel.style.display = 'inline';
+            
+            // Reset character counter
+            updateCharacterCount();
         }
         
         modal.style.display = 'flex';
@@ -1092,4 +1136,103 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => e.target.style.display = 'none', 200);
         }
     });
+    
+    // Character counter for description textarea
+    const descriptionTextarea = document.getElementById('productDescription');
+    if (descriptionTextarea) {
+        descriptionTextarea.addEventListener('input', updateCharacterCount);
+    }
+    
+    // File upload drag and drop
+    const uploadZone = document.querySelector('.upload-zone');
+    if (uploadZone) {
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+        
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('productImage').files = files;
+                handleFileSelect(document.getElementById('productImage'));
+            }
+        });
+    }
 });
+
+// ========================================
+// CHARACTER COUNTER
+// ========================================
+
+function updateCharacterCount() {
+    const textarea = document.getElementById('productDescription');
+    const charCount = document.getElementById('charCount');
+    
+    if (!textarea || !charCount) return;
+    
+    const current = textarea.value.length;
+    const max = textarea.maxLength || 500;
+    const remaining = max - current;
+    
+    charCount.textContent = `${current} / ${max}`;
+    
+    // Update styling based on character count
+    charCount.classList.remove('warning', 'danger');
+    if (remaining < 50) {
+        charCount.classList.add('danger');
+    } else if (remaining < 100) {
+        charCount.classList.add('warning');
+    }
+}
+
+// ========================================
+// FILE UPLOAD HANDLER
+// ========================================
+
+function handleFileSelect(input) {
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    
+    if (!fileNameDisplay) return;
+    
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+        
+        fileNameDisplay.textContent = `${file.name} (${fileSize}MB)`;
+        fileNameDisplay.style.display = 'inline-block';
+    } else {
+        fileNameDisplay.textContent = '';
+        fileNameDisplay.style.display = 'none';
+    }
+}
+// ========================================
+// IMAGE MANAGEMENT
+// ========================================
+
+async function removeProductImage(productId, imageUrl) {
+    if (!confirm('Are you sure you want to remove this image?')) {
+        return;
+    }
+    
+    try {
+        // This would call your backend API to remove the image
+        // For now, just show a notification
+        notify.info('Image removal feature - backend integration needed');
+        console.log('Remove image:', productId, imageUrl);
+        
+        // You would implement this in your backend:
+        // await api.removeProductImage(productId, imageUrl);
+        // Then refresh the modal
+        
+    } catch (error) {
+        console.error('Error removing image:', error);
+        notify.error('Failed to remove image');
+    }
+}

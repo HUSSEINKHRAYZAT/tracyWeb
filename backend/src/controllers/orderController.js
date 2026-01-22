@@ -1,18 +1,41 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const pool = require('../config/database');
+
 
 /**
  * Calculate order totals
  */
-function calculateOrderTotals(items) {
+async function calculateOrderTotals(items) {
     const subtotalCents = items.reduce((sum, item) => sum + (item.priceCents * item.quantity), 0);
     
-    // Simple shipping calculation - $5 flat rate, free over $100
-    const shippingCents = subtotalCents >= 10000 ? 0 : 500;
+    // Fetch shipping and tax settings from database
+    let shippingFeeCents = 1000; // Default: $10
+    let freeShippingThresholdCents = 10000; // Default: $100
+    let taxRate = 0.10; // Default: 10%
     
-    // Simple tax calculation - 10% (replace with proper tax calculation)
-    const taxCents = Math.round(subtotalCents * 0.10);
+    try {
+        const settingsResult = await pool.query(`
+            SELECT key, value 
+            FROM site_settings 
+            WHERE key IN ('shipping_fee_cents', 'free_shipping_threshold_cents', 'tax_rate')
+        `);
+        
+        settingsResult.rows.forEach(row => {
+            if (row.key === 'shipping_fee_cents') {
+                shippingFeeCents = parseInt(row.value) || 1000;
+            } else if (row.key === 'free_shipping_threshold_cents') {
+                freeShippingThresholdCents = parseInt(row.value) || 10000;
+            } else if (row.key === 'tax_rate') {
+                taxRate = parseFloat(row.value) || 0.10;
+            }
+        });
+    } catch (error) {
+        console.error('Failed to fetch shop settings, using defaults:', error);
+    }
     
+    const shippingCents = subtotalCents >= freeShippingThresholdCents ? 0 : shippingFeeCents;
+    const taxCents = Math.round(subtotalCents * taxRate);
     const totalCents = subtotalCents + shippingCents + taxCents;
 
     return { subtotalCents, shippingCents, taxCents, totalCents };
@@ -52,7 +75,11 @@ function formatOrder(order) {
  * Create a new order
  */
 exports.create = async (req, res, next) => {
+    const client = await pool.connect();
+    
     try {
+        await client.query('BEGIN');
+        
         const { items, shippingAddress, billingAddress, notes, paymentMethod } = req.body;
 
         // Validate and fetch products
@@ -62,6 +89,7 @@ exports.create = async (req, res, next) => {
             const product = await Product.findById(item.productId);
             
             if (!product) {
+                await client.query('ROLLBACK');
                 return res.status(404).json({
                     success: false,
                     error: {
@@ -72,6 +100,7 @@ exports.create = async (req, res, next) => {
             }
 
             if (!product.is_active) {
+                await client.query('ROLLBACK');
                 return res.status(400).json({
                     success: false,
                     error: {
@@ -82,11 +111,26 @@ exports.create = async (req, res, next) => {
             }
 
             if (product.stock_quantity < item.quantity) {
+                await client.query('ROLLBACK');
                 return res.status(400).json({
                     success: false,
                     error: {
                         code: 'INSUFFICIENT_STOCK',
                         message: `Insufficient stock for ${product.name}. Available: ${product.stock_quantity}`
+                    }
+                });
+            }
+
+            // Decrement stock quantity
+            try {
+                await Product.decrementStock(product.id, item.quantity, client);
+            } catch (error) {
+                await client.query('ROLLBACK');
+                return res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'STOCK_UPDATE_FAILED',
+                        message: error.message
                     }
                 });
             }
@@ -114,6 +158,8 @@ exports.create = async (req, res, next) => {
             paymentMethod: paymentMethod || 'cash'
         });
 
+        await client.query('COMMIT');
+
         // Fetch complete order with items
         const completeOrder = await Order.findById(order.id);
 
@@ -125,7 +171,10 @@ exports.create = async (req, res, next) => {
             message: 'Order created successfully'
         });
     } catch (error) {
+        await client.query('ROLLBACK');
         next(error);
+    } finally {
+        client.release();
     }
 };
 
