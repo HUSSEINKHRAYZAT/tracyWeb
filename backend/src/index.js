@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -6,6 +6,8 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const csrf = require('csurf');
 const pool = require('./config/database');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,10 +61,12 @@ const corsOptions = {
             process.env.FRONTEND_URL || 'http://localhost:8000',
             'http://127.0.0.1:8000',
             'http://localhost:5500', // Live Server default
-            'http://127.0.0.1:5500'
+            'http://127.0.0.1:5500',
+            'http://localhost:3000', // Allow same-origin for Swagger UI
+            'http://127.0.0.1:3000'
         ];
-        
-        // Allow requests with no origin (mobile apps, Postman, etc.)
+
+        // Allow requests with no origin (mobile apps, Postman, Swagger UI, etc.)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -166,13 +170,26 @@ app.get('/api/config', (req, res) => {
 
 // CSRF token endpoint
 app.get('/api/csrf-token', csrfProtection, (req, res) => {
-    res.json({ 
-        csrfToken: req.csrfToken() 
+    res.json({
+        csrfToken: req.csrfToken()
     });
 });
 
-// API Routes (with CSRF protection)
-app.use('/api/auth', csrfProtection, require('./routes/auth'));
+// Swagger API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Tracy Talks Health API Docs'
+}));
+
+// Swagger JSON endpoint
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
+
+// API Routes
+// Note: CSRF protection is applied selectively within route files
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products')); // Read-only, no CSRF needed
 app.use('/api/categories', require('./routes/categories')); // Read-only, no CSRF needed
 app.use('/api/cart', csrfProtection, require('./routes/cart'));
@@ -219,6 +236,7 @@ app.listen(PORT, () => {
     console.log(`📡 Server running on port ${PORT}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+    console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
     console.log(`🛍️  Products API: http://localhost:${PORT}/api/products`);
     console.log('='.repeat(50));
     console.log('');
